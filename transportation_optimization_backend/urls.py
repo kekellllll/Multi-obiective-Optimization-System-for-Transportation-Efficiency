@@ -32,8 +32,7 @@ except ImportError:
     pass
 
 try:
-    from drf_spectacular.views import (SpectacularAPIView,
-                                       SpectacularSwaggerView)
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
     urlpatterns.extend(
         [

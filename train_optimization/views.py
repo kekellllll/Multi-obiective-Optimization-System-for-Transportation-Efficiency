@@ -10,13 +10,17 @@ from rest_framework.response import Response
 
 from .models import OptimizationTask, PerformanceMetric, Route, Schedule, Train
 from .optimization import PerformanceAnalyzer
-from .serializers import (DashboardMetricsSerializer,
-                          OptimizationTaskCreateSerializer,
-                          OptimizationTaskSerializer,
-                          PerformanceMetricCreateSerializer,
-                          PerformanceMetricSerializer, RouteSerializer,
-                          ScheduleCreateSerializer, ScheduleSerializer,
-                          TrainSerializer)
+from .serializers import (
+    DashboardMetricsSerializer,
+    OptimizationTaskCreateSerializer,
+    OptimizationTaskSerializer,
+    PerformanceMetricCreateSerializer,
+    PerformanceMetricSerializer,
+    RouteSerializer,
+    ScheduleCreateSerializer,
+    ScheduleSerializer,
+    TrainSerializer,
+)
 from .tasks import run_optimization_task
 
 
@@ -70,7 +74,7 @@ class TrainViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
-    filterset_fields = ["train_type", "is_operational"]
+    filterset_fields = ["is_operational"]
     search_fields = ["train_id", "train_type"]
     ordering_fields = [
         "train_id",
