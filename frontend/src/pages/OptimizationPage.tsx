@@ -35,13 +35,13 @@ import {
   ExpandMore as ExpandMoreIcon,
   PlayArrow as PlayArrowIcon,
 } from '@mui/icons-material';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import {
   fetchOptimizationTasks,
   createOptimizationTask,
   restartOptimizationTask,
   fetchMyTasks,
-} from '../../store/slices/optimizationSlice';
+} from '../store/slices/optimizationSlice';
 
 const OptimizationPage: React.FC = () => {
   const dispatch = useAppDispatch();

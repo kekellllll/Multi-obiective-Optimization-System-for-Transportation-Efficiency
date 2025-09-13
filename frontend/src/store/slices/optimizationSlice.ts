@@ -84,7 +84,7 @@ const optimizationSlice = createSlice({
           myTask.results = results;
         }
       }
-      if (state.currentTask?.task_id === taskId) {
+      if (state.currentTask?.task_id === taskId && state.currentTask) {
         state.currentTask.status = status;
         if (results) {
           state.currentTask.results = results;

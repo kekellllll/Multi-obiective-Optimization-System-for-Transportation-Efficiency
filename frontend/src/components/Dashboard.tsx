@@ -24,9 +24,9 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { fetchDashboardMetrics, fetchPerformanceTrends } from '../../store/slices/performanceSlice';
-import { fetchUpcomingSchedules } from '../../store/slices/scheduleSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { fetchDashboardMetrics, fetchPerformanceTrends } from '../store/slices/performanceSlice';
+import { fetchUpcomingSchedules } from '../store/slices/scheduleSlice';
 
 interface MetricCardProps {
   title: string;

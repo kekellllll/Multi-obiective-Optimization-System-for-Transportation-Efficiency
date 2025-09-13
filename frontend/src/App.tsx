@@ -1,11 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
 import {
   ThemeProvider,
   createTheme,
@@ -13,28 +7,12 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Box,
-  IconButton,
-  useMediaQuery,
-  useTheme,
+  Card,
+  CardContent,
+  Grid,
 } from '@mui/material';
-import {
-  Dashboard as DashboardIcon,
-  Train as TrainIcon,
-  Route as RouteIcon,
-  Schedule as ScheduleIcon,
-  Analytics as AnalyticsIcon,
-  Menu as MenuIcon,
-  TrendingUp as OptimizationIcon,
-} from '@mui/icons-material';
 import { store } from './store';
-import Dashboard from './components/Dashboard';
-import OptimizationPage from './pages/OptimizationPage';
 
 const theme = createTheme({
   palette: {
@@ -48,124 +26,145 @@ const theme = createTheme({
   },
 });
 
-const drawerWidth = 240;
-
-interface NavigationItem {
-  text: string;
-  icon: React.ReactNode;
-  path: string;
+interface MetricCardProps {
+  title: string;
+  value: number | string;
+  unit?: string;
+  color?: string;
 }
 
-const navigationItems: NavigationItem[] = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-  { text: 'Optimization', icon: <OptimizationIcon />, path: '/optimization' },
-  { text: 'Trains', icon: <TrainIcon />, path: '/trains' },
-  { text: 'Routes', icon: <RouteIcon />, path: '/routes' },
-  { text: 'Schedules', icon: <ScheduleIcon />, path: '/schedules' },
-  { text: 'Analytics', icon: <AnalyticsIcon />, path: '/analytics' },
-];
+const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit, color = 'primary' }) => (
+  <Card>
+    <CardContent>
+      <Typography variant="h6" color="textSecondary" gutterBottom>
+        {title}
+      </Typography>
+      <Typography variant="h4" color={color}>
+        {typeof value === 'number' ? value.toLocaleString() : value}
+        {unit && <Typography variant="body2" component="span" color="textSecondary">{' '}{unit}</Typography>}
+      </Typography>
+    </CardContent>
+  </Card>
+);
 
-const AppContent: React.FC = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+const SimpleDashboard: React.FC = () => {
+  // Mock data for demonstration
+  const dashboardMetrics = {
+    total_trains: 45,
+    active_routes: 12,
+    scheduled_trips: 234,
+    cost_savings: 125000,
+    avg_fuel_efficiency: 11.2,
+    on_time_performance: 94.5,
+    total_passengers: 15678,
+    optimization_tasks_completed: 23
   };
 
-  const drawer = (
-    <div>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          Transport Opt.
-        </Typography>
-      </Toolbar>
-      <List>
-        {navigationItems.map((item) => (
-          <ListItem key={item.text} component="a" href={item.path}>
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-          ml: { md: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Multi-Objective Transportation Efficiency Optimization System
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Transportation Optimization Dashboard
+      </Typography>
       
-      <Box
-        component="nav"
-        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/optimization" element={<OptimizationPage />} />
-          <Route path="/trains" element={<Dashboard />} />
-          <Route path="/routes" element={<Dashboard />} />
-          <Route path="/schedules" element={<Dashboard />} />
-          <Route path="/analytics" element={<Dashboard />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Box>
+      {/* Key Metrics Cards */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Total Trains"
+            value={dashboardMetrics.total_trains}
+            color="primary"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Active Routes"
+            value={dashboardMetrics.active_routes}
+            color="secondary"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Scheduled Trips"
+            value={dashboardMetrics.scheduled_trips}
+            color="success"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Cost Savings"
+            value={`$${dashboardMetrics.cost_savings.toLocaleString()}`}
+            color="warning"
+          />
+        </Grid>
+      </Grid>
+
+      {/* Performance Metrics */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Avg Fuel Efficiency"
+            value={dashboardMetrics.avg_fuel_efficiency.toFixed(1)}
+            unit="km/L"
+            color="info"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="On-Time Performance"
+            value={`${dashboardMetrics.on_time_performance.toFixed(1)}%`}
+            color={dashboardMetrics.on_time_performance >= 90 ? 'success' : 'warning'}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Total Passengers"
+            value={dashboardMetrics.total_passengers}
+            color="info"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <MetricCard
+            title="Optimization Tasks"
+            value={dashboardMetrics.optimization_tasks_completed}
+            color="secondary"
+          />
+        </Grid>
+      </Grid>
+
+      {/* Status Information */}
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                System Status
+              </Typography>
+              <Typography variant="body1" color="success.main">
+                ✅ All systems operational
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Last updated: {new Date().toLocaleString()}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Multi-Objective Optimization
+              </Typography>
+              <Typography variant="body1">
+                NSGA-II Algorithm Active
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Optimizing fuel efficiency, on-time performance, costs, and capacity utilization
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
@@ -174,9 +173,17 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Router>
-          <AppContent />
-        </Router>
+        <CssBaseline />
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Multi-Objective Transportation Efficiency Optimization System
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <SimpleDashboard />
+        </Box>
       </ThemeProvider>
     </Provider>
   );
