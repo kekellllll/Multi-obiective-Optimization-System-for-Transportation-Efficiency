@@ -1,10 +1,25 @@
+import unittest
+from datetime import datetime, timedelta
+
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
-from rest_framework import status
-from train_optimization.models import Route, Train, Schedule, OptimizationTask
-from datetime import datetime, timedelta
+
+from train_optimization.models import OptimizationTask, Route, Schedule, Train
+
+# Check if REST framework is available
+try:
+    from rest_framework import status
+    from rest_framework.test import APITestCase
+
+    REST_FRAMEWORK_AVAILABLE = True
+except ImportError:
+    # Create a mock APITestCase for when REST framework is not available
+    class APITestCase(TestCase):
+        def setUp(self):
+            pass
+
+    REST_FRAMEWORK_AVAILABLE = False
 
 
 class RouteModelTest(TestCase):
@@ -14,7 +29,7 @@ class RouteModelTest(TestCase):
             start_station="Station A",
             end_station="Station B",
             distance=100.0,
-            estimated_travel_time=timedelta(hours=2)
+            estimated_travel_time=timedelta(hours=2),
         )
 
     def test_route_creation(self):
@@ -37,7 +52,7 @@ class TrainModelTest(TestCase):
             capacity=200,
             max_speed=120.0,
             fuel_efficiency=10.5,
-            maintenance_cost_per_km=5.00
+            maintenance_cost_per_km=5.00,
         )
 
     def test_train_creation(self):
@@ -54,48 +69,52 @@ class TrainModelTest(TestCase):
 
 class RouteAPITest(APITestCase):
     def setUp(self):
+        if not REST_FRAMEWORK_AVAILABLE:
+            self.skipTest("REST framework not available")
         self.user = User.objects.create_user(
-            username='testuser', password='testpass123'
+            username="testuser", password="testpass123"
         )
         self.route = Route.objects.create(
             name="API Test Route",
             start_station="Station X",
             end_station="Station Y",
             distance=150.0,
-            estimated_travel_time=timedelta(hours=3)
+            estimated_travel_time=timedelta(hours=3),
         )
         self.client.force_authenticate(user=self.user)
 
     def test_get_routes_list(self):
-        url = reverse('route-list')
+        url = reverse("route-list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(len(response.data["results"]), 1)
 
     def test_get_route_detail(self):
-        url = reverse('route-detail', kwargs={'pk': self.route.pk})
+        url = reverse("route-detail", kwargs={"pk": self.route.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], "API Test Route")
+        self.assertEqual(response.data["name"], "API Test Route")
 
     def test_create_route(self):
-        url = reverse('route-list')
+        url = reverse("route-list")
         data = {
-            'name': 'New Route',
-            'start_station': 'Station C',
-            'end_station': 'Station D',
-            'distance': 75.0,
-            'estimated_travel_time': '01:30:00'
+            "name": "New Route",
+            "start_station": "Station C",
+            "end_station": "Station D",
+            "distance": 75.0,
+            "estimated_travel_time": "01:30:00",
         }
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Route.objects.count(), 2)
 
 
 class TrainAPITest(APITestCase):
     def setUp(self):
+        if not REST_FRAMEWORK_AVAILABLE:
+            self.skipTest("REST framework not available")
         self.user = User.objects.create_user(
-            username='testuser', password='testpass123'
+            username="testuser", password="testpass123"
         )
         self.train = Train.objects.create(
             train_id="API001",
@@ -103,18 +122,18 @@ class TrainAPITest(APITestCase):
             capacity=150,
             max_speed=80.0,
             fuel_efficiency=12.0,
-            maintenance_cost_per_km=4.50
+            maintenance_cost_per_km=4.50,
         )
         self.client.force_authenticate(user=self.user)
 
     def test_get_trains_list(self):
-        url = reverse('train-list')
+        url = reverse("train-list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(len(response.data["results"]), 1)
 
     def test_get_operational_trains(self):
-        url = reverse('train-operational')
+        url = reverse("train-operational")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
@@ -123,14 +142,14 @@ class TrainAPITest(APITestCase):
 class OptimizationTaskTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            username='testuser', password='testpass123'
+            username="testuser", password="testpass123"
         )
         self.task = OptimizationTask.objects.create(
             task_id="test-task-123",
             user=self.user,
             optimization_type="multi_objective",
             parameters={"time_horizon": 24},
-            status="pending"
+            status="pending",
         )
 
     def test_optimization_task_creation(self):
@@ -146,8 +165,10 @@ class OptimizationTaskTest(TestCase):
 
 class DashboardAPITest(APITestCase):
     def setUp(self):
+        if not REST_FRAMEWORK_AVAILABLE:
+            self.skipTest("REST framework not available")
         self.user = User.objects.create_user(
-            username='testuser', password='testpass123'
+            username="testuser", password="testpass123"
         )
         # Create some test data
         self.train = Train.objects.create(
@@ -156,27 +177,32 @@ class DashboardAPITest(APITestCase):
             capacity=200,
             max_speed=120.0,
             fuel_efficiency=10.5,
-            maintenance_cost_per_km=5.00
+            maintenance_cost_per_km=5.00,
         )
         self.route = Route.objects.create(
             name="Dashboard Route",
             start_station="Station A",
             end_station="Station B",
             distance=100.0,
-            estimated_travel_time=timedelta(hours=2)
+            estimated_travel_time=timedelta(hours=2),
         )
         self.client.force_authenticate(user=self.user)
 
     def test_dashboard_metrics(self):
-        url = reverse('performancemetric-dashboard')
+        url = reverse("performancemetric-dashboard")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
+
         # Check that dashboard metrics contain expected fields
         expected_fields = [
-            'total_trains', 'active_routes', 'scheduled_trips',
-            'avg_fuel_efficiency', 'on_time_performance',
-            'total_passengers', 'cost_savings', 'optimization_tasks_completed'
+            "total_trains",
+            "active_routes",
+            "scheduled_trips",
+            "avg_fuel_efficiency",
+            "on_time_performance",
+            "total_passengers",
+            "cost_savings",
+            "optimization_tasks_completed",
         ]
         for field in expected_fields:
             self.assertIn(field, response.data)
