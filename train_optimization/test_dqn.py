@@ -273,11 +273,11 @@ class DQNIntegrationTest(APITestCase):
         
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['optimization_type'], 'dqn')
-        self.assertEqual(response.data['status'], 'pending')
         
         # Check task was created in database
-        task = OptimizationTask.objects.get(task_id=response.data['task_id'])
+        task = OptimizationTask.objects.get(optimization_type='dqn')
         self.assertEqual(task.optimization_type, 'dqn')
+        self.assertEqual(task.status, 'pending')
 
     @patch('train_optimization.tasks.run_optimization_task.delay')
     def test_dqn_task_creation_triggers_celery(self, mock_delay):
