@@ -97,6 +97,7 @@ class OptimizationTask(models.Model):
         ("route", "Route Optimization"),
         ("fuel", "Fuel Efficiency"),
         ("multi_objective", "Multi-Objective"),
+        ("dqn", "Deep Q-Network (DQN)"),
     ]
 
     task_id = models.CharField(max_length=100, unique=True)

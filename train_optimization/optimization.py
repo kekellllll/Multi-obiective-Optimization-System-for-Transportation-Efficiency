@@ -37,6 +37,13 @@ from typing import Any, Dict, List, Tuple
 
 from .models import OptimizationTask, PerformanceMetric, Route, Schedule, Train
 
+# Import DQN optimization if available
+try:
+    from .dqn_optimization import DQNOptimizer
+    DQN_AVAILABLE = True
+except ImportError:
+    DQN_AVAILABLE = False
+
 
 class MultiObjectiveOptimizer:
     """Multi-objective optimization algorithm for transportation efficiency"""
@@ -46,6 +53,52 @@ class MultiObjectiveOptimizer:
         self.generations = 100
         self.mutation_rate = 0.1
         self.crossover_rate = 0.8
+
+    def optimize(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+        """Main optimization method that routes to appropriate algorithm"""
+        optimization_type = parameters.get("optimization_type", "multi_objective")
+        
+        if optimization_type == "dqn" and DQN_AVAILABLE:
+            return self.dqn_optimization(parameters)
+        elif optimization_type in ["multi_objective", "nsga2"]:
+            return self.nsga2_optimization(parameters)
+        else:
+            # Default to NSGA-II for backward compatibility
+            return self.nsga2_optimization(parameters)
+    
+    def dqn_optimization(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+        """Deep Q-Network optimization for reinforcement learning approach"""
+        if not DQN_AVAILABLE:
+            return {
+                "error": "DQN optimization not available. TensorFlow may not be installed.",
+                "fallback": "Using NSGA-II algorithm instead",
+                **self.nsga2_optimization(parameters)
+            }
+        
+        try:
+            dqn_optimizer = DQNOptimizer()
+            results = dqn_optimizer.optimize(parameters)
+            
+            # Enhance results with additional metrics
+            results.update({
+                "optimization_type": "Deep Q-Network (DQN)",
+                "algorithm_details": {
+                    "type": "Reinforcement Learning",
+                    "approach": "Model-free Q-learning with neural networks",
+                    "exploration_strategy": "Epsilon-greedy",
+                    "experience_replay": True,
+                    "target_network": True
+                }
+            })
+            
+            return results
+            
+        except Exception as e:
+            return {
+                "error": f"DQN optimization failed: {str(e)}",
+                "fallback": "Using NSGA-II algorithm instead",
+                **self.nsga2_optimization(parameters)
+            }
 
     def nsga2_optimization(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
         """NSGA-II algorithm for multi-objective optimization"""

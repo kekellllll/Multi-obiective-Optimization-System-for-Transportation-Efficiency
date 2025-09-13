@@ -26,11 +26,13 @@ def run_optimization_task(self, task_id, optimization_type, parameters):
         optimizer = MultiObjectiveOptimizer()
 
         # Run optimization based on type
-        if optimization_type == "multi_objective":
+        if optimization_type == "dqn":
+            results = optimizer.optimize({"optimization_type": "dqn", **parameters})
+        elif optimization_type == "multi_objective":
             results = optimizer.nsga2_optimization(parameters)
         else:
-            # For other optimization types, use the same algorithm for now
-            results = optimizer.nsga2_optimization(parameters)
+            # Use the main optimize method which handles routing
+            results = optimizer.optimize({"optimization_type": optimization_type, **parameters})
 
         # Update task with results
         task.status = "completed"
