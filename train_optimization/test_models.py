@@ -72,7 +72,7 @@ class RouteAPITest(APITestCase):
         if not REST_FRAMEWORK_AVAILABLE:
             self.skipTest("REST framework not available")
         self.user = User.objects.create_user(
-            username="testuser", password="testpass123"
+            username="testuser", password="testpass123"  # nosec B106 - test password
         )
         self.route = Route.objects.create(
             name="API Test Route",
@@ -114,7 +114,7 @@ class TrainAPITest(APITestCase):
         if not REST_FRAMEWORK_AVAILABLE:
             self.skipTest("REST framework not available")
         self.user = User.objects.create_user(
-            username="testuser", password="testpass123"
+            username="testuser", password="testpass123"  # nosec B106 - test password
         )
         self.train = Train.objects.create(
             train_id="API001",
@@ -142,7 +142,7 @@ class TrainAPITest(APITestCase):
 class OptimizationTaskTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            username="testuser", password="testpass123"
+            username="testuser", password="testpass123"  # nosec B106 - test password
         )
         self.task = OptimizationTask.objects.create(
             task_id="test-task-123",
@@ -168,7 +168,7 @@ class DashboardAPITest(APITestCase):
         if not REST_FRAMEWORK_AVAILABLE:
             self.skipTest("REST framework not available")
         self.user = User.objects.create_user(
-            username="testuser", password="testpass123"
+            username="testuser", password="testpass123"  # nosec B106 - test password
         )
         # Create some test data
         self.train = Train.objects.create(

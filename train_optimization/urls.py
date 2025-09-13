@@ -6,8 +6,13 @@ urlpatterns = []
 try:
     from rest_framework.routers import DefaultRouter
 
-    from .views import (OptimizationTaskViewSet, PerformanceMetricViewSet,
-                        RouteViewSet, ScheduleViewSet, TrainViewSet)
+    from .views import (
+        OptimizationTaskViewSet,
+        PerformanceMetricViewSet,
+        RouteViewSet,
+        ScheduleViewSet,
+        TrainViewSet,
+    )
 
     router = DefaultRouter()
     router.register(r"routes", RouteViewSet)
