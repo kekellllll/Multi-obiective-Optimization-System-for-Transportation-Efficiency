@@ -395,7 +395,7 @@ class DQNOptimizer:
     def __init__(self):
         self.agent = None
         self.environment = None
-        self.model_path = "/tmp/dqn_transport_model.h5"
+        self.model_path = "/tmp/dqn_transport_model.weights.h5"
     
     def optimize(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
         """Run DQN optimization"""
