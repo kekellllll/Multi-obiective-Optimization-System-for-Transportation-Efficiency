@@ -10,7 +10,8 @@ import {
   Box,
   Card,
   CardContent,
-  Grid,
+  Container,
+  Stack,
 } from '@mui/material';
 import { store } from './store';
 
@@ -61,80 +62,68 @@ const SimpleDashboard: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Transportation Optimization Dashboard
-      </Typography>
-      
-      {/* Key Metrics Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Total Trains"
-            value={dashboardMetrics.total_trains}
-            color="primary"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Active Routes"
-            value={dashboardMetrics.active_routes}
-            color="secondary"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Scheduled Trips"
-            value={dashboardMetrics.scheduled_trips}
-            color="success"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Cost Savings"
-            value={`$${dashboardMetrics.cost_savings.toLocaleString()}`}
-            color="warning"
-          />
-        </Grid>
-      </Grid>
+    <Container maxWidth="xl">
+      <Box sx={{ flexGrow: 1, p: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Transportation Optimization Dashboard
+        </Typography>
+        
+        {/* Key Metrics Cards */}
+        <Box sx={{ mb: 4 }}>
+          <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
+            <MetricCard
+              title="Total Trains"
+              value={dashboardMetrics.total_trains}
+              color="primary"
+            />
+            <MetricCard
+              title="Active Routes"
+              value={dashboardMetrics.active_routes}
+              color="secondary"
+            />
+            <MetricCard
+              title="Scheduled Trips"
+              value={dashboardMetrics.scheduled_trips}
+              color="success"
+            />
+            <MetricCard
+              title="Cost Savings"
+              value={`$${dashboardMetrics.cost_savings.toLocaleString()}`}
+              color="warning"
+            />
+          </Stack>
+        </Box>
 
-      {/* Performance Metrics */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Avg Fuel Efficiency"
-            value={dashboardMetrics.avg_fuel_efficiency.toFixed(1)}
-            unit="km/L"
-            color="info"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="On-Time Performance"
-            value={`${dashboardMetrics.on_time_performance.toFixed(1)}%`}
-            color={dashboardMetrics.on_time_performance >= 90 ? 'success' : 'warning'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Total Passengers"
-            value={dashboardMetrics.total_passengers}
-            color="info"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Optimization Tasks"
-            value={dashboardMetrics.optimization_tasks_completed}
-            color="secondary"
-          />
-        </Grid>
-      </Grid>
+        {/* Performance Metrics */}
+        <Box sx={{ mb: 4 }}>
+          <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
+            <MetricCard
+              title="Avg Fuel Efficiency"
+              value={dashboardMetrics.avg_fuel_efficiency.toFixed(1)}
+              unit="km/L"
+              color="info"
+            />
+            <MetricCard
+              title="On-Time Performance"
+              value={`${dashboardMetrics.on_time_performance.toFixed(1)}%`}
+              color={dashboardMetrics.on_time_performance >= 90 ? 'success' : 'warning'}
+            />
+            <MetricCard
+              title="Total Passengers"
+              value={dashboardMetrics.total_passengers}
+              color="info"
+            />
+            <MetricCard
+              title="Optimization Tasks"
+              value={dashboardMetrics.optimization_tasks_completed}
+              color="secondary"
+            />
+          </Stack>
+        </Box>
 
-      {/* Status Information */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Card>
+        {/* Status Information */}
+        <Stack spacing={3} direction={{ xs: 'column', md: 'row' }}>
+          <Card sx={{ flex: 1 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 System Status
@@ -147,25 +136,29 @@ const SimpleDashboard: React.FC = () => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={6}>
-          <Card>
+          
+          <Card sx={{ flex: 1 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Multi-Objective Optimization
               </Typography>
               <Typography variant="body1">
-                NSGA-II Algorithm Active
+                NSGA-II & DQN Algorithms Active
+              </Typography>
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                • NSGA-II: Multi-objective evolutionary optimization
               </Typography>
               <Typography variant="body2" color="textSecondary">
+                • DQN: Reinforcement learning for dynamic scheduling
+              </Typography>
+              <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                 Optimizing fuel efficiency, on-time performance, costs, and capacity utilization
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
-    </Box>
+        </Stack>
+      </Box>
+    </Container>
   );
 };
 
