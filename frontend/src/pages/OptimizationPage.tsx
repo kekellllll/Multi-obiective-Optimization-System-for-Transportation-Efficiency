@@ -196,21 +196,21 @@ const OptimizationPage: React.FC = () => {
               Performance Improvements
             </Typography>
             <Grid container spacing={1}>
-              <Grid item>
+              <Grid>
                 <Chip
                   label={`Fuel Savings: ${performance_improvements.estimated_fuel_savings}`}
                   color="success"
                   variant="outlined"
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <Chip
                   label={`Cost Reduction: ${performance_improvements.cost_reduction}`}
                   color="info"
                   variant="outlined"
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <Chip
                   label={`Efficiency Gain: ${performance_improvements.efficiency_gain}`}
                   color="warning"
