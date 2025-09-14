@@ -2,6 +2,42 @@
 
 A comprehensive, scalable system for optimizing transportation efficiency using multi-objective algorithms, real-time data visualization, and microservices architecture.
 
+## 🚨 Quick Fix for Connection Issues
+
+**If you're getting "localhost refused connection" errors**, the services are not running. Here's the fastest way to fix it:
+
+### Option 1: Quick Start (Recommended)
+```bash
+# Clone and start everything in one go
+git clone https://github.com/kekellllll/Multi-obiective-Optimization-System-for-Transportation-Efficiency.git
+cd Multi-obiective-Optimization-System-for-Transportation-Efficiency
+./start-dev.sh
+```
+
+### Option 2: Manual Start
+```bash
+# Start database services
+docker compose up -d postgres redis
+
+# Install and start backend
+pip3 install -r requirements-minimal.txt
+python3 manage.py migrate
+python3 manage.py runserver 0.0.0.0:8000 &
+
+# Install and start frontend
+cd frontend
+npm install
+REACT_APP_API_URL=http://localhost:8000/api/v1 npm start &
+```
+
+### Access URLs (once services are running):
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000/api/v1/
+- **API Documentation**: http://localhost:8000/api/docs/
+- **Admin Panel**: http://localhost:8000/admin/
+
+---
+
 ## 🎯 Features
 
 ### Backend (Django + REST API)
